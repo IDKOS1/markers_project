@@ -29,13 +29,18 @@ class _NaviswipeStateState extends State<NaviswipeState> {
                   label: 'home'
               ),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.music_note),
-                  label: 'Music'
+                  icon: Icon(Icons.density_medium_rounded),
+                  label: 'view'
               ),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.apps),
-                  label: 'Apps'
+                  icon: Icon(Icons.add),
+                  label: 'add'
               ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.message),
+                  label: 'message'
+              ),
+
               BottomNavigationBarItem(
                   icon: Icon(Icons.settings),
                   label: 'settings'
@@ -50,14 +55,15 @@ class _NaviswipeStateState extends State<NaviswipeState> {
           //BottomNavigationBarType.shifting : selected 된 item 확대
         ),
         body: Center(
-          child: body_item.elementAt(current_index),
+          child: body_item[current_index],
         )
     );
   }
 
   List body_item = [
     HomeScreen(),
-    Text("music"),
+    Text("message"),
+    Text("add"),
     Text("apps"),
     Text("settings")
   ];
