@@ -6,9 +6,10 @@ import 'Screen/bottom_navigator_bar.dart';
 void main() {
   runApp(
       MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.red,
+                seedColor: Colors.blue,
                 brightness: Brightness.light
             )
         ),

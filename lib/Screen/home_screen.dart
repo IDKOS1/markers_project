@@ -3,6 +3,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 
+import '../Widget/customMyLocation.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -36,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     circleId: CircleId('notWithinDistanceCircle'),
     center: companyLatLng,
     fillColor: Colors.red.withOpacity(0.5),
-    // 투명도
+    // 투도
     radius: okDistance,
     strokeColor: Colors.red,
     strokeWidth: 1,
@@ -51,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     strokeColor: Colors.green,
     strokeWidth: 1,
   );
+
   static final Marker marker = Marker(
     markerId: MarkerId('marker'),
     position: companyLatLng,
@@ -89,20 +92,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       if(distance < okDistance) {
                         isWithinRange = true;
                       }
-
                     }
 
                     return Column(
                       children: [
                         _CustomGoogleMap(
                           initialPosition: initalPosition,
-                          circle: choolCheckDone
-                              ? checkDoneCircle
-                              : isWithinRange
-                              ? withinDistanceCircle
-                              : notWithinDistanceCircle,
                           marker: marker,
                           onMapCreated: onMapCreated,
+                          mapController: mapController,
                         ),
                       ],
                     );
@@ -147,17 +145,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+
 class _CustomGoogleMap extends StatelessWidget {
   final CameraPosition initialPosition;
-  final Circle circle;
   final Marker marker;
   final MapCreatedCallback onMapCreated;
+  final GoogleMapController? mapController;
 
   const _CustomGoogleMap({
     required this.initialPosition,
-    required this.circle,
     required this.marker,
     required this.onMapCreated,
+    required this.mapController,
     Key? key
   }) : super(key: key);
 
@@ -165,58 +164,21 @@ class _CustomGoogleMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 3,
-      child: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: initialPosition,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: false,
-        circles: Set.from([circle]),
-        markers: Set.from([marker]),
-        onMapCreated: onMapCreated,
+      child: Stack(
+        children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: initialPosition,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            markers: Set.from([marker]),
+            onMapCreated: onMapCreated,
+          ),
+          customMyLocation(mapController)
+        ],
       ),
     );
   }
 }
 
-class _ChoolCheckButton extends StatelessWidget {
-  final bool isWithinRange;
-  final VoidCallback onPressed;
-  final bool choolCheckDone;
 
-  const _ChoolCheckButton({
-    required this.isWithinRange,
-    required this.onPressed,
-    required this.choolCheckDone,
-
-    Key? key
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-
-
-    return Expanded(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.timelapse_outlined,
-              size: 50,
-              color: choolCheckDone
-                  ?  Colors.green
-                  :isWithinRange
-                  ? Colors.blue
-                  : Colors.red,
-            ),
-            SizedBox(height: 20),
-            if(!choolCheckDone && isWithinRange)
-              TextButton(
-                onPressed: onPressed,
-                child: Text('출근하기'),
-              )
-
-          ],
-        )
-    );
-  }
-}

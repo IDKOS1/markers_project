@@ -1,30 +1,58 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:markers_project/main.dart';
+class LocationPicker extends StatefulWidget {
+  final void Function(LatLng) onLocationSelected;
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  const LocationPicker({Key? key, required this.onLocationSelected}) : super(key: key);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  @override
+  _LocationPickerState createState() => _LocationPickerState();
+}
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+class _LocationPickerState extends State<LocationPicker> {
+  LatLng selectedLocation = LatLng(0, 0);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('위치 선택'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('선택한 위치: ${selectedLocation.latitude}, ${selectedLocation.longitude}'),
+            ElevatedButton(
+              onPressed: () {
+                // 위치 설정 완료
+                widget.onLocationSelected(selectedLocation);
+                Navigator.pop(context);
+              },
+              child: Text('선택 완료'),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // 위치 설정
+          selectLocation();
+        },
+        child: Icon(Icons.add_location),
+      ),
+    );
+  }
+
+  void selectLocation() async {
+    // 위치 선택 로직 구현
+    // GoogleMap을 사용하여 위치를 선택하고, 해당 좌표를 selectedLocation에 업데이트
+
+    // 가상의 좌표값을 설정하는 예시 코드
+    final LatLng newLocation = LatLng(37.123, -122.456);
+    setState(() {
+      selectedLocation = newLocation;
+    });
+  }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:markers_project/Screen/message_screen.dart';
+import 'package:markers_project/Screen/publish.dart';
 import 'home_screen.dart';
 
 class NaviswipeState extends StatefulWidget {
@@ -23,7 +25,7 @@ class _NaviswipeStateState extends State<NaviswipeState> {
                 current_index = index;
               });
             },
-            items: [
+            items: const [
               BottomNavigationBarItem(
                   icon: Icon(Icons.home),
                   label: 'home'
@@ -62,9 +64,9 @@ class _NaviswipeStateState extends State<NaviswipeState> {
 
   List body_item = [
     HomeScreen(),
-    Text("message"),
-    Text("add"),
-    Text("apps"),
+    MessageScreen(),
+    Publish(),
+    Text("message page"),
     Text("settings")
   ];
 }
