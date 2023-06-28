@@ -24,25 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static final double okDistance = 100;
 
-  static final Circle withinDistanceCircle = Circle(
-    circleId: CircleId('withinDistanceCircle'),
-    center: companyLatLng,
-    fillColor: Colors.blue.withOpacity(0.5),
-    // 투명도
-    radius: okDistance,
-    strokeColor: Colors.blue,
-    strokeWidth: 1,
-  );
 
-  static final Circle notWithinDistanceCircle = Circle(
-    circleId: CircleId('notWithinDistanceCircle'),
-    center: companyLatLng,
-    fillColor: Colors.red.withOpacity(0.5),
-    // 투도
-    radius: okDistance,
-    strokeColor: Colors.red,
-    strokeWidth: 1,
-  );
 
   static final Circle checkDoneCircle = Circle(
     circleId: CircleId('checkDoneCircle'),

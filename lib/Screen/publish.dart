@@ -34,7 +34,7 @@ class _PublishState extends State<Publish> {
                     titleValue = value;
                   },
                   decoration: InputDecoration(
-                    labelText: '제목을 입력하세요'
+                      labelText: '제목을 입력하세요'
                   ),
                 ),
                 Align(
@@ -100,15 +100,34 @@ class _SetLocation extends StatefulWidget {
   State<_SetLocation> createState() => _SetLocationState();
 }
 
-class _SetLocationState extends State<_SetLocation> {
+class _SetLocationState extends State<_SetLocation> with SingleTickerProviderStateMixin {
   late Circle circle;
   late LatLng myLatLng;
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(0, 0),
+      end: Offset(0, -0.3),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   void _getCurrentLocation() {
@@ -123,7 +142,7 @@ class _SetLocationState extends State<_SetLocation> {
           strokeColor: Colors.blue,
           strokeWidth: 2,
         );
-        isLoading = false; // 위치 정보가 설정되었으므로 로딩 상태 종료
+        isLoading = false;
       });
     });
   }
@@ -131,9 +150,17 @@ class _SetLocationState extends State<_SetLocation> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
+      // Handle case when myLatLng is null or loading
       return Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 10,),
+              Text('현재위치를 불러오는중')
+            ],
+          ),
         ),
       );
     }
@@ -153,7 +180,11 @@ class _SetLocationState extends State<_SetLocation> {
                 myLocationButtonEnabled: false,
                 circles: Set.from([circle]),
                 onCameraIdle: () {
+                  _controller.reverse();
                   // Handle onCameraIdle event
+                },
+                onCameraMoveStarted: () {
+                  _controller.forward();
                 },
               ),
               Align(
@@ -169,6 +200,39 @@ class _SetLocationState extends State<_SetLocation> {
                 ),
               ),
               customMyLocation(null),
+              IgnorePointer(
+                child: Center(
+                  child: AnimatedPositioned(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                    bottom: 35,
+                    child: SlideTransition(
+                      position: _offsetAnimation,
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 35),
+                        child: Image.asset('images/marker.png'),
+                        width: 25,
+                        height: 50,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              IgnorePointer(
+                child: Center(
+                  child: Container(
+                    child: ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                        Colors.transparent.withOpacity(0.4),
+                        BlendMode.srcIn,
+                      ),
+                      child: Image.asset('images/shadow.png'),
+                    ),
+                    width: 25,
+                    height: 50,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
