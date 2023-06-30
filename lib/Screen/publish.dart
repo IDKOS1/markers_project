@@ -78,8 +78,10 @@ class _PublishState extends State<Publish> {
     );
 
     if (selectedLocation != null) {
+      final double roundedLatitude = double.parse(selectedLocation.latitude.toStringAsFixed(7));
+      final double roundedLongitude = double.parse(selectedLocation.longitude.toStringAsFixed(7));
       setState(() {
-        myLocation = selectedLocation;
+        myLocation = LatLng(roundedLatitude, roundedLongitude);
       });
     }
   }
@@ -103,9 +105,18 @@ class _SetLocation extends StatefulWidget {
 class _SetLocationState extends State<_SetLocation> with SingleTickerProviderStateMixin {
   late Circle circle;
   late LatLng myLatLng;
+  late LatLng center;
+  late double distance;
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
+  late Animation<Color?> _markerColorAnimation;
+  late Animation<Color?> _buttonColorAnimation;
+  GoogleMapController? mapController;
+  final double circleRadius = 300;
   bool isLoading = true;
+  bool isincircle = false;
+
+
 
   @override
   void initState() {
@@ -122,6 +133,14 @@ class _SetLocationState extends State<_SetLocation> with SingleTickerProviderSta
       parent: _controller,
       curve: Curves.easeInOut,
     ));
+    _markerColorAnimation = ColorTween(
+      begin: Colors.redAccent,
+      end: Colors.grey,
+    ).animate(_controller);
+    _buttonColorAnimation = ColorTween(
+      begin: Colors.blue,
+      end: Colors.grey,
+    ).animate(_controller);
   }
 
   @override
@@ -138,7 +157,7 @@ class _SetLocationState extends State<_SetLocation> with SingleTickerProviderSta
           circleId: CircleId('myLocation'),
           center: myLatLng,
           fillColor: Colors.blue.withOpacity(0.3),
-          radius: 300,
+          radius: circleRadius,
           strokeColor: Colors.blue,
           strokeWidth: 2,
         );
@@ -146,6 +165,20 @@ class _SetLocationState extends State<_SetLocation> with SingleTickerProviderSta
       });
     });
   }
+
+  onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  void getDistance() {
+    distance = Geolocator.distanceBetween(
+        myLatLng.latitude,
+        myLatLng.longitude,
+        center.latitude,
+        center.longitude
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -167,74 +200,92 @@ class _SetLocationState extends State<_SetLocation> with SingleTickerProviderSta
 
     return Scaffold(
       body: Center(
-        child: Expanded(
-          child: Stack(
-            children: [
-              GoogleMap(
-                mapType: MapType.normal,
-                initialCameraPosition: CameraPosition(
-                  target: myLatLng,
-                  zoom: 15,
-                ),
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                circles: Set.from([circle]),
-                onCameraIdle: () {
+        child: Stack(
+          children: [
+            GoogleMap(
+              compassEnabled: false,
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                target: myLatLng,
+                zoom: 15,
+              ),
+              onMapCreated: onMapCreated,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              circles: Set.from([circle]),
+              onCameraIdle: () async {
+                getDistance();
+                if(distance < circleRadius) {
                   _controller.reverse();
-                  // Handle onCameraIdle event
-                },
-                onCameraMoveStarted: () {
-                  _controller.forward();
-                },
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 20),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context, circle.center);
-                    },
-                    child: Text('위치 설정'),
-                  ),
-                ),
-              ),
-              customMyLocation(null),
-              IgnorePointer(
-                child: Center(
-                  child: AnimatedPositioned(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                    bottom: 35,
-                    child: SlideTransition(
-                      position: _offsetAnimation,
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 35),
-                        child: Image.asset('images/marker.png'),
-                        width: 25,
-                        height: 50,
+                }
+              },
+              onCameraMoveStarted: () {
+                _controller.forward();
+              },
+              onCameraMove: (CameraPosition cp){
+                center = cp.target;
+              },
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.only(bottom: 20),
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (BuildContext context, Widget?child) {
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _buttonColorAnimation.value
                       ),
-                    ),
-                  ),
+                      onPressed: () {
+                        getDistance();
+                        if(distance < circleRadius) {
+                          Navigator.pop(context, center);
+                        }
+                      },
+                      child: Text('위치 설정'),
+                    );
+                  }
                 ),
               ),
-              IgnorePointer(
-                child: Center(
+            ),
+            customMyLocation(mapController),
+            IgnorePointer(
+              child: Center(
+                child: SlideTransition(
+                  position: _offsetAnimation,
                   child: Container(
-                    child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                        Colors.transparent.withOpacity(0.4),
-                        BlendMode.srcIn,
-                      ),
-                      child: Image.asset('images/shadow.png'),
+                    margin: EdgeInsets.only(bottom: 28),
+                    child: AnimatedBuilder(
+                      animation:_controller,
+                      builder: (BuildContext context, Widget? child) {
+                        return Icon(
+                            Icons.location_on,
+                            color: _markerColorAnimation.value,
+                            size: 35
+                        );
+                      }
                     ),
-                    width: 25,
-                    height: 50,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            IgnorePointer(
+              child: Center(
+                child: Container(
+                  child: ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      Colors.transparent.withOpacity(0.4),
+                      BlendMode.srcIn,
+                    ),
+                    child: Image.asset('images/shadow.png'),
+                  ),
+                  width: 25,
+                  height: 50,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

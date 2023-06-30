@@ -257,5 +257,6 @@ class _LocationChooserState extends State<LocationScreen> {
       _detail = first.addressLine;
       _lane1.text = _title + "   " + _detail;
     });
+
   }
 }
