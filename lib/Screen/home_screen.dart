@@ -156,7 +156,7 @@ class _CustomGoogleMap extends StatelessWidget {
             markers: Set.from([marker]),
             onMapCreated: onMapCreated,
           ),
-          customMyLocation(mapController)
+          customMyLocation(mapController, context)
         ],
       ),
     );

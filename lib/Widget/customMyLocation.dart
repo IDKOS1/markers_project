@@ -2,7 +2,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-Widget customMyLocation(GoogleMapController? mapController) {
+Widget customMyLocation(GoogleMapController? mapController, BuildContext context) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 30, left: 10),
     child: Align(
@@ -44,7 +44,7 @@ Widget customMyLocation(GoogleMapController? mapController) {
               child: Icon(
                 Icons.my_location_outlined,
                 size: 22,
-                color: Colors.grey,
+                color: Theme.of(context).colorScheme.primary,
               )
           ),
         )

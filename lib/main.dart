@@ -10,8 +10,9 @@ void main() {
         theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
                 seedColor: Colors.blue,
-                brightness: Brightness.light
-            )
+                brightness: Brightness.light,
+            ),
+          useMaterial3: true
         ),
         home: NaviswipeState(),
       )

@@ -23,7 +23,10 @@ class _PublishState extends State<Publish> {
       },
       child: Scaffold(
           appBar: AppBar(
-            title: Text('마커 남기기'),
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            title: Text('마커 남기기',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
           body: Padding(
             padding: EdgeInsets.all(20),
@@ -150,10 +153,13 @@ class _SetLocationState extends State<_SetLocation> with SingleTickerProviderSta
       begin: Colors.redAccent,
       end: Colors.grey,
     ).animate(_controller);
-    _buttonColorAnimation = ColorTween(
-      begin: Colors.blue,
-      end: Colors.grey,
-    ).animate(_controller);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _buttonColorAnimation = ColorTween(
+        begin: Theme.of(context).colorScheme.primary,
+        end: Colors.grey,
+      ).animate(_controller);
+    });
+
   }
 
   @override
@@ -257,13 +263,16 @@ class _SetLocationState extends State<_SetLocation> with SingleTickerProviderSta
                           Navigator.pop(context, center);
                         }
                       },
-                      child: Text('위치 설정'),
+                      child: Text('위치 설정',
+                      style: TextStyle(
+                        color: Colors.white
+                      ),),
                     );
                   }
                 ),
               ),
             ),
-            customMyLocation(mapController),
+            customMyLocation(mapController, context),
             IgnorePointer(
               child: Center(
                 child: SlideTransition(

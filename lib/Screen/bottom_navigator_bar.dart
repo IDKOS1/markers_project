@@ -49,7 +49,7 @@ class _NaviswipeStateState extends State<NaviswipeState> {
               ),
             ],
             // 선택된 index 색상
-            selectedItemColor: Colors.cyan[600],
+            selectedItemColor: Theme.of(context).colorScheme.primary,
             // 미선택된 index 색상
             unselectedItemColor: Colors.grey,
             showUnselectedLabels: true,
