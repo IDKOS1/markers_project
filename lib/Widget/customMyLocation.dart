@@ -16,11 +16,12 @@ Widget customMyLocation(GoogleMapController? mapController) {
             final location = await Geolocator.getCurrentPosition();
 
             mapController!.animateCamera(
-              CameraUpdate.newLatLng(
+              CameraUpdate.newLatLngZoom(
                 LatLng(
                   location.latitude,
                   location.longitude,
                 ),
+                16  //zoomlevel
               ),
             );
           },

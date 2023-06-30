@@ -19,8 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // latitude - 위도, longitude - 경도
   static final LatLng companyLatLng = LatLng(37.5233273, 126.921252);
-  static final CameraPosition initalPosition =
-  CameraPosition(target: companyLatLng, zoom: 15);
 
   static final double okDistance = 100;
 
@@ -58,23 +56,23 @@ class _HomeScreenState extends State<HomeScreen> {
               return StreamBuilder<Position>(
                   stream: Geolocator.getPositionStream(),
                   builder: (context, snapshot) {
-                    bool isWithinRange = false;
-
-                    if(snapshot.hasData){
-                      final start = snapshot.data!;
-                      final end = companyLatLng;
-
-                      final distance = Geolocator.distanceBetween(
-                          start.latitude,
-                          start.longitude,
-                          end.latitude,
-                          end.longitude
+                    if(!snapshot.hasData){
+                      return const Scaffold(
+                        body: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(height: 10,),
+                              Text('현재위치를 불러오는중')
+                            ],
+                          ),
+                        ),
                       );
-
-                      if(distance < okDistance) {
-                        isWithinRange = true;
-                      }
                     }
+
+                    final CameraPosition initalPosition =
+                    CameraPosition(target: LatLng(snapshot.data!.latitude, snapshot.data!.longitude), zoom: 15);
 
                     return Column(
                       children: [
@@ -149,6 +147,8 @@ class _CustomGoogleMap extends StatelessWidget {
       child: Stack(
         children: [
           GoogleMap(
+            tiltGesturesEnabled: false,
+            rotateGesturesEnabled: false,
             mapType: MapType.normal,
             initialCameraPosition: initialPosition,
             myLocationEnabled: true,

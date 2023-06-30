@@ -29,37 +29,50 @@ class _PublishState extends State<Publish> {
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
-                TextField(
-                  onChanged: (value) {
-                    titleValue = value;
-                  },
-                  decoration: InputDecoration(
-                      labelText: '제목을 입력하세요'
+                Expanded(
+                  child: Column(
+                    children: [
+                      TextField(
+                        onChanged: (value) {
+                          titleValue = value;
+                        },
+                        decoration: InputDecoration(
+                            labelText: '제목을 입력하세요'
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton(
+                            onPressed: () {
+                              _LocationSelectScreen();
+                            },
+                            child: Row(
+                              children: [
+                                Icon(Icons.location_on),
+                                Text('설정위치 위도:${myLocation.latitude} 경도:${myLocation.longitude}'),
+                              ],
+                            )
+                        ),
+                      ),
+                      SizedBox(height: 30,),
+                      TextField(
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                        onChanged: (value) {
+                          titleValue = value;
+                        },
+                        decoration: InputDecoration(
+                            labelText: '내용을 입력하세요'
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                      onPressed: () {
-                        _LocationSelectScreen();
-                      },
-                      child: Row(
-                        children: [
-                          Icon(Icons.location_on),
-                          Text('설정위치 위도:${myLocation.latitude} 경도:${myLocation.longitude}'),
-                        ],
-                      )
-                  ),
-                ),
-                SizedBox(height: 30,),
-                TextField(
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  onChanged: (value) {
-                    titleValue = value;
-                  },
-                  decoration: InputDecoration(
-                      labelText: '내용을 입력하세요'
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text('등록하기'),
                   ),
                 )
               ],
@@ -203,7 +216,8 @@ class _SetLocationState extends State<_SetLocation> with SingleTickerProviderSta
         child: Stack(
           children: [
             GoogleMap(
-              compassEnabled: false,
+              tiltGesturesEnabled: false,
+              rotateGesturesEnabled: false,
               mapType: MapType.normal,
               initialCameraPosition: CameraPosition(
                 target: myLatLng,
