@@ -105,8 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.5),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(color: Colors.black)
                                     ),
                                     child: TextField(
                                       maxLines: 1,
