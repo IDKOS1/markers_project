@@ -80,9 +80,12 @@ class _PublishState extends State<Publish> {
                         Spacer(),
                         Align(
                           alignment: Alignment.bottomCenter,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: Text('등록하기'),
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20),
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Text('등록하기'),
+                            ),
                           ),
                         )
                       ],
