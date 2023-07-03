@@ -31,21 +31,21 @@ class _NaviswipeStateState extends State<NaviswipeState> {
                   label: 'home'
               ),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.density_medium_rounded),
-                  label: 'view'
+                  icon: Icon(Icons.message),
+                  label: 'message'
               ),
               BottomNavigationBarItem(
                   icon: Icon(Icons.add),
                   label: 'add'
               ),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.message),
-                  label: 'message'
+                  icon: Icon(Icons.notifications),
+                  label: 'notice'
               ),
 
               BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'settings'
+                  icon: Icon(Icons.person),
+                  label: 'profile'
               ),
             ],
             // 선택된 index 색상
