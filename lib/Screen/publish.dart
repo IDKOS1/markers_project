@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:markers_project/Widget/TagWidget.dart';
 import '../Widget/customMyLocation.dart';
 
 class Publish extends StatefulWidget {
@@ -12,6 +13,7 @@ class Publish extends StatefulWidget {
 
 class _PublishState extends State<Publish> {
   String titleValue = '';
+  String contentsValue = '';
   LatLng myLocation = LatLng(0,0);
   GoogleMapController? mapController;
 
@@ -28,58 +30,67 @@ class _PublishState extends State<Publish> {
               style: TextStyle(color: Colors.white),
             ),
           ),
-          body: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      TextField(
-                        onChanged: (value) {
-                          titleValue = value;
-                        },
-                        decoration: InputDecoration(
-                            labelText: '제목을 입력하세요'
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton(
-                            onPressed: () {
-                              _LocationSelectScreen();
-                            },
-                            child: Row(
-                              children: [
-                                Icon(Icons.location_on),
-                                Text('설정위치 위도:${myLocation.latitude} 경도:${myLocation.longitude}'),
-                              ],
+          body: Column(
+            children: [
+              SizedBox(height: 20),
+              TagList(),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Column(
+                          children: [
+                            TextField(
+                              onChanged: (value) {
+                                titleValue = value;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: '제목을 입력하세요'
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                  onPressed: () {
+                                    _LocationSelectScreen();
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.location_on),
+                                      Text('설정위치 위도:${myLocation.latitude} 경도:${myLocation.longitude}'),
+                                    ],
+                                  )
+                              ),
+                            ),
+                            SizedBox(height: 30,),
+                            TextField(
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                              onChanged: (value) {
+                                contentsValue = value;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: '내용을 입력하세요',
+                              ),
                             )
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 30,),
-                      TextField(
-                        maxLines: null,
-                        keyboardType: TextInputType.multiline,
-                        onChanged: (value) {
-                          titleValue = value;
-                        },
-                        decoration: InputDecoration(
-                            labelText: '내용을 입력하세요'
-                        ),
-                      )
-                    ],
+                        Spacer(),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            child: Text('등록하기'),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text('등록하기'),
-                  ),
-                )
-              ],
-            ),
+              ),
+            ],
           )
       ),
     );
@@ -222,6 +233,7 @@ class _SetLocationState extends State<_SetLocation> with SingleTickerProviderSta
         child: Stack(
           children: [
             GoogleMap(
+              zoomControlsEnabled: false,
               tiltGesturesEnabled: false,
               rotateGesturesEnabled: false,
               mapType: MapType.normal,

@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 
+import '../Widget/TagWidget.dart';
 import '../Widget/customMyLocation.dart';
 
 
@@ -16,6 +19,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool choolCheckDone = false;
   GoogleMapController? mapController;
+  String searchValue = '';
+  bool isLocationOk = false;
+  CameraPosition? currentLocation;
 
   // latitude - 위도, longitude - 경도
   static final LatLng companyLatLng = LatLng(37.5233273, 126.921252);
@@ -56,7 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
               return StreamBuilder<Position>(
                   stream: Geolocator.getPositionStream(),
                   builder: (context, snapshot) {
-                    if(!snapshot.hasData){
+                    if(!isLocationOk){
+                      if(snapshot.hasData){
+                        currentLocation =
+                            CameraPosition(target: LatLng(snapshot.data!.latitude, snapshot.data!.longitude), zoom: 15);
+                        isLocationOk = true;
+                      }
                       return const Scaffold(
                         body: Center(
                           child: Column(
@@ -71,17 +82,55 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
 
-                    final CameraPosition initalPosition =
-                    CameraPosition(target: LatLng(snapshot.data!.latitude, snapshot.data!.longitude), zoom: 15);
 
-                    return Column(
+                    return Stack(
+                      alignment: Alignment.topCenter,
                       children: [
                         _CustomGoogleMap(
-                          initialPosition: initalPosition,
+                          initialPosition: currentLocation!,
                           marker: marker,
                           onMapCreated: onMapCreated,
                           mapController: mapController,
                         ),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                    sigmaX: 10,
+                                    sigmaY: 10,
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: TextField(
+                                      maxLines: 1,
+                                      keyboardType: TextInputType.multiline,
+                                      onChanged: (value) {
+                                        searchValue = value;
+                                      },
+                                      decoration: InputDecoration(
+                                        hintText: '검색',
+                                        icon: Padding(
+                                          padding: EdgeInsets.only(left: 15),
+                                          child: Icon(Icons.search),
+                                        ),
+                                        border: InputBorder.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TagList(),
+                          ],
+                        ),
+                        customMyLocation(mapController, context)
                       ],
                     );
                   }
@@ -142,23 +191,16 @@ class _CustomGoogleMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 3,
-      child: Stack(
-        children: [
-          GoogleMap(
-            tiltGesturesEnabled: false,
-            rotateGesturesEnabled: false,
-            mapType: MapType.normal,
-            initialCameraPosition: initialPosition,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            markers: Set.from([marker]),
-            onMapCreated: onMapCreated,
-          ),
-          customMyLocation(mapController, context)
-        ],
-      ),
+    return GoogleMap(
+      tiltGesturesEnabled: false,
+      rotateGesturesEnabled: false,
+      mapType: MapType.normal,
+      initialCameraPosition: initialPosition,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: false,
+      markers: Set.from([marker]),
+      onMapCreated: onMapCreated,
     );
   }
 }
