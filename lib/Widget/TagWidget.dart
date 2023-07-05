@@ -19,8 +19,23 @@ class _TagListState extends State<TagList> {
         child: Row(
           children: [
             AddTag(
-              icon: Icons.people,
+              icon: Icons.error_outline,
               color: Colors.red,
+              text: '태그 6',
+              indexNum: 6,
+              // 선택한 태그가 현재 태그랑 같은지 검사, 다르면 isSelected에 0입력 되며 강조 제거
+              isSelected: selectNum == 6,
+              onTagSelected: (num) {
+                setState(() {
+                  // num은 선택시 indexNum이 반환, 반환된 num이 현재 선택된
+                  // selectNum과 같으면 selectNum 은 0이 되며 강조 제거 됨
+                  selectNum = num == selectNum ? 0 : num;
+                });
+              },
+            ),
+            AddTag(
+              icon: Icons.people,
+              color: Colors.blue,
               text: '태그 1',
               indexNum: 1,
               isSelected: selectNum == 1,
@@ -32,7 +47,7 @@ class _TagListState extends State<TagList> {
             ),
             AddTag(
               icon: Icons.coffee,
-              color: Colors.blue,
+              color: Colors.yellow.shade700,
               text: '태그 2',
               indexNum: 2,
               isSelected: selectNum == 2,
@@ -43,7 +58,7 @@ class _TagListState extends State<TagList> {
               },
             ),
             AddTag(
-              icon: Icons.movie,
+              icon: Icons.question_mark,
               color: Colors.green,
               text: '태그 3',
               indexNum: 3,
@@ -77,7 +92,7 @@ class _TagListState extends State<TagList> {
                   selectNum = num == selectNum ? 0 : num;
                 });
               },
-            )
+            ),
           ],
         ),
       ),
@@ -110,6 +125,7 @@ class AddTag extends StatelessWidget {
       padding: EdgeInsets.only(left: 10),
       child: GestureDetector(
         onTap: () {
+          // 태그 클릭 시 onTagSelected의 num에 0 혹은 indexNum 반환
           if (isSelected) {
             onTagSelected(0); // 선택 해제
           } else {
@@ -123,6 +139,7 @@ class AddTag extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             color: Colors.white,
             border: Border.all(
+              // 선택시 설정 color 미선택시 투명 테두리
               color: isSelected ? color : Colors.transparent,
               width: 2.0,
             ),

@@ -16,9 +16,16 @@ class _PublishState extends State<Publish> {
   String contentsValue = '';
   LatLng myLocation = LatLng(0,0);
   GoogleMapController? mapController;
-
+  bool isLocationSet = false;
+  Color locationColor = Colors.grey;
   @override
   Widget build(BuildContext context) {
+    if(myLocation != LatLng(0,0)){
+      isLocationSet = true;
+    }
+    if(isLocationSet){
+      locationColor = Theme.of(context).colorScheme.primary;
+    }
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -58,8 +65,14 @@ class _PublishState extends State<Publish> {
                                   },
                                   child: Row(
                                     children: [
-                                      Icon(Icons.location_on),
-                                      Text('설정위치 위도:${myLocation.latitude} 경도:${myLocation.longitude}'),
+                                      Icon(Icons.location_on,
+                                      color: locationColor,
+                                      ),
+                                      Text('설정위치 위도:${myLocation.latitude} 경도:${myLocation.longitude}',
+                                        style: TextStyle(
+                                            color: locationColor
+                                        ),
+                                      ),
                                     ],
                                   )
                               ),
@@ -108,8 +121,8 @@ class _PublishState extends State<Publish> {
     );
 
     if (selectedLocation != null) {
-      final double roundedLatitude = double.parse(selectedLocation.latitude.toStringAsFixed(7));
-      final double roundedLongitude = double.parse(selectedLocation.longitude.toStringAsFixed(7));
+      final double roundedLatitude = double.parse(selectedLocation.latitude.toStringAsFixed(5));
+      final double roundedLongitude = double.parse(selectedLocation.longitude.toStringAsFixed(5));
       setState(() {
         myLocation = LatLng(roundedLatitude, roundedLongitude);
       });

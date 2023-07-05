@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CircularProgressIndicator(),
-                              SizedBox(height: 10,),
+                              SizedBox(height: 10),
                               Text('현재위치를 불러오는중')
                             ],
                           ),
@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(color: Colors.black)
+                                      border: Border.all(color: Colors.black.withOpacity(0.3))
                                     ),
                                     child: TextField(
                                       maxLines: 1,
@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     if (checkedPermission == LocationPermission.deniedForever) {
-      return '앱의 위치 권한을 세팅에서 허가해주세요.';
+      return '앱의 위치 권한을 설정에서 허가해주세요.';
     }
 
     return '위치 권한이 허가되었습니다.';
