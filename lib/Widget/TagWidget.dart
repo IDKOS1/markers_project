@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class TagList extends StatefulWidget {
   const TagList({Key? key}) : super(key: key);
@@ -46,7 +47,7 @@ class _TagListState extends State<TagList> {
               },
             ),
             AddTag(
-              icon: Icons.coffee,
+              icon: Icons.sports_tennis,
               color: Colors.yellow.shade700,
               text: '태그 2',
               indexNum: 2,
