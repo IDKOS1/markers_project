@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);  // 상단 상태바 숨기기
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);  // 상단 상태바
     return Scaffold(
         body: FutureBuilder(
           future: checkPermission(),

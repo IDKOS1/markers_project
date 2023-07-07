@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:markers_project/Screen/message_screen.dart';
-import 'package:markers_project/Screen/publish.dart';
+import 'package:markers_project/Screen/publish/publish.dart';
 import 'home_screen.dart';
 
 class NaviswipeState extends StatefulWidget {
