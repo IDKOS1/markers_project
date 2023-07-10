@@ -12,6 +12,8 @@ class LocationScreen extends StatefulWidget {
   _LocationChooserState createState() => _LocationChooserState();
 }
 
+
+
 class _LocationChooserState extends State<LocationScreen> {
   Completer<GoogleMapController> _controller = Completer();
   static const LatLng _center = const LatLng(45.343434, -122.545454);
