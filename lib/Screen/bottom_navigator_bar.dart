@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:markers_project/Screen/message_screen.dart';
+import 'package:markers_project/Screen/message/message_screen.dart';
 import 'package:markers_project/Screen/publish/publish.dart';
-import 'home_screen.dart';
+import 'home/home_screen.dart';
 
 class NaviswipeState extends StatefulWidget {
   const NaviswipeState({Key? key}) : super(key: key);

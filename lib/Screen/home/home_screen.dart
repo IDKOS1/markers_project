@@ -5,8 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 
-import '../Widget/TagWidget.dart';
-import '../Widget/customMyLocation.dart';
+import '../../Widget/TagWidget.dart';
+import '../../Widget/customMyLocation.dart';
+import 'bottom_post.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -17,11 +18,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String selectedTag = '';
+  String searchValue = '';
   bool choolCheckDone = false;
   GoogleMapController? mapController;
-  String searchValue = '';
   bool isLocationOk = false;
   CameraPosition? currentLocation;
+
 
   // latitude - 위도, longitude - 경도
   static final LatLng companyLatLng = LatLng(37.5233273, 126.921252);
@@ -43,11 +46,14 @@ class _HomeScreenState extends State<HomeScreen> {
   static final Marker marker = Marker(
     markerId: MarkerId('marker'),
     position: companyLatLng,
+
   );
+
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);  // 상단 상태바
+    double topPadding = MediaQuery.of(context).padding.top + 10;
     return Scaffold(
         body: FutureBuilder(
           future: checkPermission(),
@@ -65,7 +71,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     if(!isLocationOk){
                       if(snapshot.hasData){
                         currentLocation =
-                            CameraPosition(target: LatLng(snapshot.data!.latitude, snapshot.data!.longitude), zoom: 15);
+                            CameraPosition(
+                                target: LatLng(
+                                    snapshot.data!.latitude,
+                                    snapshot.data!.longitude),
+                                zoom: 15);
                         isLocationOk = true;
                       }
                       return const Scaffold(
@@ -94,8 +104,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Column(
                           children: [
+                            // 검색창
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                              padding: EdgeInsets.fromLTRB(
+                                  20, topPadding, 20, 0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
                                 child: BackdropFilter(
@@ -128,10 +140,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            TagList(),
+                            SizedBox(height: 10,),
+                            TagList(
+                              onTagSelected: (tag) {
+                                setState(() {
+                                  selectedTag = tag;
+                                });
+                              },
+                            ),
+                            Spacer(),
+                            customMyLocation(mapController, context),
+                            bottom_post(),
                           ],
                         ),
-                        customMyLocation(mapController, context)
                       ],
                     );
                   }
