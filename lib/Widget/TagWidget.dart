@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class TagList extends StatefulWidget {
-  const TagList({Key? key}) : super(key: key);
+  final ValueChanged<String> onTagSelected;
+  const TagList({
+    required this.onTagSelected,
+    Key? key}) : super(key: key);
 
   @override
   State<TagList> createState() => _TagListState();
 }
 
 class _TagListState extends State<TagList> {
+  String setTag = '';
   int selectNum = 0;
 
   @override
@@ -22,75 +26,87 @@ class _TagListState extends State<TagList> {
             AddTag(
               icon: Icons.error_outline,
               color: Colors.red,
-              text: '태그 6',
-              indexNum: 6,
+              text: '태그 1',
+              indexNum: 1,
               // 선택한 태그가 현재 태그랑 같은지 검사, 다르면 isSelected에 0입력 되며 강조 제거
-              isSelected: selectNum == 6,
+              isSelected: selectNum == 1,
               onTagSelected: (num) {
                 setState(() {
                   // num은 선택시 indexNum이 반환, 반환된 num이 현재 선택된
                   // selectNum과 같으면 selectNum 은 0이 되며 강조 제거 됨
                   selectNum = num == selectNum ? 0 : num;
+                  setTag = '태그 1';
+                  widget.onTagSelected(setTag);
                 });
               },
             ),
             AddTag(
               icon: Icons.people,
               color: Colors.blue,
-              text: '태그 1',
-              indexNum: 1,
-              isSelected: selectNum == 1,
-              onTagSelected: (num) {
-                setState(() {
-                  selectNum = num == selectNum ? 0 : num;
-                });
-              },
-            ),
-            AddTag(
-              icon: Icons.sports_tennis,
-              color: Colors.yellow.shade700,
               text: '태그 2',
               indexNum: 2,
               isSelected: selectNum == 2,
               onTagSelected: (num) {
                 setState(() {
                   selectNum = num == selectNum ? 0 : num;
+                  setTag = '태그 2';
+                  widget.onTagSelected(setTag);
                 });
               },
             ),
             AddTag(
-              icon: Icons.question_mark,
-              color: Colors.green,
+              icon: Icons.sports_tennis,
+              color: Colors.yellow.shade700,
               text: '태그 3',
               indexNum: 3,
               isSelected: selectNum == 3,
               onTagSelected: (num) {
                 setState(() {
                   selectNum = num == selectNum ? 0 : num;
+                  setTag = '태그 3';
+                  widget.onTagSelected(setTag);
                 });
               },
             ),
             AddTag(
-              icon: Icons.wine_bar,
-              color: Colors.purple,
+              icon: Icons.question_mark,
+              color: Colors.green,
               text: '태그 4',
               indexNum: 4,
               isSelected: selectNum == 4,
               onTagSelected: (num) {
                 setState(() {
                   selectNum = num == selectNum ? 0 : num;
+                  setTag = '태그 4';
+                  widget.onTagSelected(setTag);
                 });
               },
             ),
             AddTag(
-              icon: Icons.sports_bar,
-              color: Colors.orange,
+              icon: Icons.wine_bar,
+              color: Colors.purple,
               text: '태그 5',
               indexNum: 5,
               isSelected: selectNum == 5,
               onTagSelected: (num) {
                 setState(() {
                   selectNum = num == selectNum ? 0 : num;
+                  setTag = '태그 5';
+                  widget.onTagSelected(setTag);
+                });
+              },
+            ),
+            AddTag(
+              icon: Icons.sports_bar,
+              color: Colors.orange,
+              text: '태그 6',
+              indexNum: 6,
+              isSelected: selectNum == 6,
+              onTagSelected: (num) {
+                setState(() {
+                  selectNum = num == selectNum ? 0 : num;
+                  setTag = '태그 6';
+                  widget.onTagSelected(setTag);
                 });
               },
             ),
